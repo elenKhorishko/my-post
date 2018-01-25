@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2>Читаем пост полностью</h2>
+    {% for id in post %}
+        {{ post.data }} <br>
+        {{ post.title }} <br>
+        {{ post.text }} <br><br>
+    {% endfor %}
+
+    <a href="{{ path('redact') }}">Править пост</a> <br>
+
+    <a href="{{ path('homepage') }}">Вернуться на главную</a> <br>
+
+{% endblock body %}
