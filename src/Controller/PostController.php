@@ -8,7 +8,6 @@
 
 namespace App\Controller;
 
-
 use App\Entity\Post;
 use App\Form\PostType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,7 +23,7 @@ class PostController extends Controller
     public function showAll()
     {
         $repo = $this->getDoctrine()->getRepository(Post::class);
-        $posts = $repo->findAll([], ['data'=> 'DESC'], 3);
+        $posts = $repo->findBy([], ['data'=> 'DESC'], 3);
 
         return $this->render('default/index.html.twig', ['posts' => $posts]);
     }
@@ -64,14 +63,23 @@ class PostController extends Controller
     /**
      * @Route("/redact/{id}", name="redact")
      */
-    public function redact(Post $post, Request $request)
+    public function redact(Post $post, Request $request, EntityManagerInterface $em)
     {
-        $redact = new Post();
-
-        $form = $this->createForm(PostType::class, $redact);
+        $repo = $this->getDoctrine()->getRepository(Post::class);
+        $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
-        return $this->render('post/redact.html.twig', ['form' => $form->createView()]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($post);
+            $em->flush();
+            $id = $post->getId();
+            $this->addFlash('info', 'Пост исправлен!');
+
+            return $this->redirectToRoute('postOne', ['id'=>$id]);
+        }
+
+        return $this->render('post/redact.html.twig',
+            ['form' => $form->createView(), 'post' => $post]);
     }
 
 

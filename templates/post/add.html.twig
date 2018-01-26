@@ -1,14 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+    {% for message in app.flashes('info') %}
+        <p>{{ message }}</p>
+    {% endfor %}
+
     <h1>Добавить новый пост</h1>
     <div class="container-fluid">
+
 
                 {{ form_start(form) }}
                 {{ form_widget(form) }}
                 <button type="submit" class="btn btn-default">Сохранить</button>
                 {{ form_end(form) }}
-        <button type="submit" class="btn btn-default" {{ url('homepage') }}">Вернуться на главную</button>
 
                 <a href="{{ path('homepage') }}">Вернуться на главную</a> <br>
 

@@ -106,5 +106,17 @@ class Post
         return $this;
     }
 
+    public function __construct()
+    {
+         $this->data = new \DateTime();
+         $this->title = '';
+         $this->text = '';
+    }
+
+    public function detShortText(): ?string
+    {
+       $paragraphs = explode("\n", $this->text, 2);
+       return reset($paragraphs);
+    }
 
 }
