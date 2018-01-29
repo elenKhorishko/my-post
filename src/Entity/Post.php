@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,6 +35,13 @@ class Post
      * @ORM\Column(type="text")
      */
     private $text;
+
+    /**
+     * @var Comments[]|ArrayCollection
+     * @ORM\OneToMany(targetEntity="Comments", mappedBy="post")
+     * @ORM\OrderBy({"dataComm" = "DESC"})
+     */
+    private $comments;
 
     /**
      * @return mixed
@@ -111,12 +120,31 @@ class Post
          $this->data = new \DateTime();
          $this->title = '';
          $this->text = '';
+         $this->comments = new ArrayCollection();
     }
 
     public function detShortText(): ?string
     {
        $paragraphs = explode("\n", $this->text, 2);
        return reset($paragraphs);
+    }
+
+    /**
+     * @return Comments[]|ArrayCollection
+     */
+    public function getComments(): ? Collection
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comments[]|ArrayCollection $comments
+     * @return Post
+     */
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
+        return $this;
     }
 
 }

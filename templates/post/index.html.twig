@@ -6,6 +6,15 @@
         {{ post.title }} <br>
         {{ post.text }} <br><br>
 
+    {% for comment in post.comments %}
+        {{ comment.dataComm|date("m/d/Y") }} <br>
+        {{ comment.nikName }} <br>
+        {{ comment.textComm }} <br>
+
+    {%  endfor %}
+
+    <a href="{{ path('add_comm', {'id': post.id }) }}">Добавить комментарий</a>
+
     <a href="{{ path('redact', {'id': post.id }) }}">Править пост</a> <br>
 
     <a href="{{ path('homepage') }}">Вернуться на главную</a> <br>

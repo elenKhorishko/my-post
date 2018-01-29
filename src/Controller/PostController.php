@@ -8,7 +8,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Comments;
 use App\Entity\Post;
+use App\Form\CommentsType;
 use App\Form\PostType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -31,6 +33,7 @@ class PostController extends Controller
 
     /**
      * @Route("/post/{id}", name="postOne")
+     *
      */
     public function showOne(Post $post)
     {
@@ -82,5 +85,26 @@ class PostController extends Controller
             ['form' => $form->createView(), 'post' => $post]);
     }
 
+     /**
+     * @Route("/addComm/{id}", name="add_comm")
+     */
+     public function addComm(Post $post, Request $request, EntityManagerInterface $em)
+    {
+        $comm = new Comments();
+        $comm->setPost($post);
+        $form = $this->createForm(CommentsType::class, $comm);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($comm);
+            $em->flush();
+            $id = $comm->getId();
+            $this->addFlash('comm', 'Комментарий добавлен!');
+
+            return $this->redirectToRoute('postOne', ['id'=>$post->getId()]);
+        }
+
+        return $this->render('post/addComm.html.twig', ['form' => $form->createView()]);
+    }
 
 }
