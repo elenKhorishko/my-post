@@ -1,17 +1,26 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}
+    Главная страница - {{ parent() }}
+{% endblock %}
 {% block body %}
-    <h2>Все посты</h2>
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">Hello, world! It's my BLOG</h1>
+        </div>
+        <a href="{{ path('add_post') }}"> <button type="button" class="btn btn-light">Добавить пост </button></a> <br><br>
+        <div class="row">
 
-    <a href="{{ path('add_post') }}">Добавить пост</a> <br>
-
-
-    {% for post in posts %}
-        {{ post.data|date("m/d/Y") }} <br>
-        {{ post.title|title }} <br>
-        {{ post.text|slice(0,200) }} <br><br>
-        <a href="{{ path('postOne', {'id': post.id} ) }}">Читать далее </a> <br>
-        <hr>
-    {% endfor %}
+            <div class="col-6 .col-sm-3">
+            {% for post in posts %}
+                <h5 class="display-4">{{ post.data|date("m.d.Y - G:i" ) }}</h5>
+                <p class="lead">{{ post.title|title }}</p>
+                <p>{{ post.detShortText }}... <br></p>
+                <a href="{{ path('postOne', {'id': post.id} ) }}">Читать далее </a> <br>
+                <i><b>Комментариев: {{ post.countComm }}</i></b><br>
+                <hr class="my-4">
+            {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock body %}
 

@@ -147,4 +147,9 @@ class Post
         return $this;
     }
 
+    public function countComm()
+    {
+        $count = count($this->comments);
+        return $count;
+    }
 }
